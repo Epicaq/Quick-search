@@ -1,0 +1,25 @@
+String searchQuery = getCgiVariable("HtmlPage_quickSearch");
+String prefix = searchQuery.before(":").stripLeadingAndTrailing(" ").toLower();
+String searchWord = searchQuery.after(":").stripLeadingAndTrailing(" ");
+
+String redirectUrl;
+
+if(prefix == "cn")
+{
+  SearchEngine se;
+  se.bypassNetServer(true);
+  se.addField("contact.contact_id");
+  se.addCriteria("contact.number2", "Equals", searchWord);
+  Integer count = se.select();
+  if(count == 1)
+    redirectUrl = getProgramTicket() + "&action=viewTableEntry&table=contact&id=" + se.getField(0) + "&_hideFrameworkForce=0";
+  else
+    redirectUrl = getProgramTicket() + "&action=searchTable&table=contact&field.0=contact.number2&operator.0=8&value.0=" + searchWord;
+}
+else if(prefix == "cc") >= 0)
+{
+  redirectUrl = getProgramTicket() + "&action=searchTable&ok=1&table=ticket&field.0=ticket.text&operator.0=7&value.0=" + content;
+}
+
+if(!redirectUrl.isEmpty())
+  setVariable("url", redirectUrl);
